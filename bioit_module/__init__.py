@@ -1,0 +1,1 @@
+from bioit_module.base_module import BaseModule

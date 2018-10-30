@@ -10,12 +10,12 @@ OncoDNA bioit analysis module base library. This library define base requieremen
 
 ### git repository
 
-<to be define>
+https://gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git
 
 ### installation
 
 ```bash
-pip install git+ssh://git@gitlab.oncoworkers.oncodna.com/bioinfo/libs/bioit_module.git
+pip install git+ssh://git@gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git#egg=bioit_module
 ```
 
 ## What is defined

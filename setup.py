@@ -15,12 +15,12 @@ setup(name='bioit_module',
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1',
+    version='0.1.1',
 
     description='OncoDNA module template and utility library', long_description=long_description,
 
     # The project's main homepage.
-    url='http://gitlab.oncoworkers.oncodna.com/bioinfo/libs/bioit_module',
+    url='http://gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module',
 
     # Author details
     author='Maxime LIENARD', author_email='maxime.lienard@oncodna.com',
