@@ -24,7 +24,6 @@ class BaseModule(abc.ABC):
         self.__install_config__ = None
         self.__parameters__ = None
         self.__param_file__ = None
-        self.__suffix__ = None
         self.__json_log__ = None
 
     def __set_usage_str__(self, usage=None):
