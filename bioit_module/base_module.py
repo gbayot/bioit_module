@@ -4,6 +4,7 @@ import json
 import logging
 import re
 import abc
+import traceback
 from configparser import ConfigParser
 from optparse import OptionParser
 
@@ -135,7 +136,7 @@ class BaseModule(abc.ABC):
         except NotImplementedError as nie:
             raise nie
         except Exception as e:
-            self.end_process(error_code=911, error="Unexpected error: %s" % str(e))
+            self.end_process(error_code=911, error="Unexpected error: %s:\n%s" % (str(e), traceback.format_exception()))
 
     def end_process(self, error_code=0, error=None, files=None):
         # if process end with error, print info in log system
