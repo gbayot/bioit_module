@@ -3,14 +3,10 @@ from unittest import mock
 import pytest, os
 from bioit_module.base_module import BaseModule
 
+
 @pytest.fixture
 def opts():
-    options = mock.Mock()
-    options.version = False
-    options.runid = "01"
-    options.jobid = "02"
-    options.prefix = "this/is/a/test"
-    return options
+    return mock.Mock(version=False, runid="01", jobid="02", prefix="this/is/a/test")
 
 
 @pytest.fixture
@@ -33,11 +29,10 @@ def test_init_module_require_args():
         mod = FakeModule()
 
 
-def test_init_module():
-    mod = FakeModule("name", "version", "suffix")
-    assert mod.name == "name"
-    assert mod.version == "version"
-    assert mod.suffix == "suffix"
+def test_init_module(module):
+    assert module.name == "name"
+    assert module.version == "version"
+    assert module.suffix == "suffix"
 
 
 def test_init_module_with_usage():
@@ -49,9 +44,6 @@ def test_init_module_with_usage():
 def test_init_module_with_config():
     mod = FakeModule("name", "version", "suffix", install_config="test.ini")
     mod.init_std_options()
-    assert mod.name == "name"
-    assert mod.version == "version"
-    assert mod.suffix == "suffix"
     assert mod._install_config_file == "test.ini"
 
 
@@ -84,7 +76,7 @@ def test_check_std_options_pass(opts, module):
     assert module.version == "version"
 
 
-@mock.patch('optparse.OptionParser.parse_args')
+@mock.patch("optparse.OptionParser.parse_args")
 def test_run_noparam_noconfig(mock_parse_args, opts):
     mod = FakeModule("name", "version", "suffix", no_parameters=True)
     args = ["not an input file"]
@@ -95,45 +87,38 @@ def test_run_noparam_noconfig(mock_parse_args, opts):
     shutil.rmtree("this")
 
 
-def test_load_config_no_file_error():
-    mod = FakeModule("name", "version", "suffix")
-    mod._install_config_file = "NotAFile"
-    mod._json_log = "summary.json"
-    assert mod.load_install_config() == 10
+def test_load_config_no_file_error(module):
+    module._install_config_file = "NotAFile"
+    module._json_log = "summary.json"
+    assert module.load_install_config() == 10
     os.unlink("summary.json")
 
 
-@mock.patch('bioit_module.BaseModule.check_install_config')
-def test_load_config_file_check_error(mock_check_install_config):
-    mod = FakeModule("name", "version", "suffix")
-    mod._install_config_file = "pytest.ini"
-    mod._json_log = "summary.json"
-    mock_check_install_config.side_effect = Exception("Random error")
-    assert mod.load_install_config() == 10
-    os.unlink("summary.json")
+@mock.patch("bioit_module.BaseModule.check_install_config")
+class TestLoadConfigFileCheck:
+    def test_error(self, mock_check_install_config, module):
+        module._install_config_file = "pytest.ini"
+        module._json_log = "summary.json"
+        mock_check_install_config.side_effect = Exception("Random error")
+        assert module.load_install_config() == 10
+        os.unlink("summary.json")
+
+    def test_ok(self, mock_check_install_config, module):
+        module._install_config_file = "pytest.ini"
+        mock_check_install_config.return_value = None
+        assert module.load_install_config() == 0
 
 
-@mock.patch('bioit_module.BaseModule.check_install_config')
-def test_load_config_file_check_ok(mock_check_install_config):
-    mod = FakeModule("name", "version", "suffix")
-    mod._install_config_file = "pytest.ini"
-    mock_check_install_config.return_value = None
-    assert mod.load_install_config() == 0
+@mock.patch("bioit_module.BaseModule.check_parameters")
+class TestLoadParameterFileCheck:
+    def test_error(self, mock_check_parameters, module):
+        module._param_file = "NotAFile"
+        module._json_log = "summary.json"
+        mock_check_parameters.side_effect = Exception("Random error")
+        assert module.load_parameter_file() == 11
+        os.unlink("summary.json")
 
-
-@mock.patch('bioit_module.BaseModule.check_parameters')
-def test_load_parameter_file_check_error(mock_check_parameters):
-    mod = FakeModule("name", "version", "suffix")
-    mod._param_file = "NotAFile"
-    mod._json_log = "summary.json"
-    mock_check_parameters.side_effect = Exception("Random error")
-    assert mod.load_parameter_file() == 11
-    os.unlink("summary.json")
-
-
-@mock.patch('bioit_module.BaseModule.check_parameters')
-def test_load_config_file_check_ok(mock_check_parameters):
-    mod = FakeModule("name", "version", "suffix")
-    mod._param_file = "pytest.ini"
-    mock_check_parameters.return_value = None
-    assert mod.load_parameter_file() == 0
+    def test_ok(self, mock_check_parameters, module):
+        module._param_file = "pytest.ini"
+        mock_check_parameters.return_value = None
+        assert module.load_parameter_file() == 0
