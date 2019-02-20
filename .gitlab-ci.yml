@@ -1,0 +1,13 @@
+image: python:3.5
+
+stages:
+  - tests
+
+tests:
+  stage: tests
+  script:
+    - pip install pytest -r requirements.txt
+    - pytest
+  artifacts:
+    reports:
+      junit: report.xml
