@@ -135,7 +135,9 @@ class BaseModule(abc.ABC):
     def load_install_config(self):
         if self._install_config_file is not None:
             try:
-                # TODO: Add file exist test
+                if not os.path.isfile(self._install_config_file):
+                    raise FileNotFoundError("%s: No such file or directory" %
+                                            self._install_config_file)
                 logging.debug("Loading install configuration file: %s",
                               self._install_config_file)
                 self.install_config = ConfigParser()

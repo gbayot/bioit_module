@@ -98,13 +98,15 @@ def test_run_noparam_noconfig(mock_parse_args, opts):
 def test_load_config_no_file_error():
     mod = FakeModule("name", "version", "suffix")
     mod._install_config_file = "NotAFile"
-    assert mod.load_install_config() == 0
+    mod._json_log = "summary.json"
+    assert mod.load_install_config() == 10
+    os.unlink("summary.json")
 
 
 @mock.patch('bioit_module.BaseModule.check_install_config')
 def test_load_config_file_check_error(mock_check_install_config):
     mod = FakeModule("name", "version", "suffix")
-    mod._install_config_file = "NotAFile"
+    mod._install_config_file = "pytest.ini"
     mod._json_log = "summary.json"
     mock_check_install_config.side_effect = Exception("Random error")
     assert mod.load_install_config() == 10
