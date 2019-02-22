@@ -19,6 +19,11 @@ class FakeModule(BaseModule):
         pass
 
 
+class FakeModuleError(BaseModule):
+    def start_process(self, **kwargs):
+        raise Exception("Random error")
+
+
 def test_cannot_instantiate():
     with pytest.raises(TypeError):
         BaseModule()
@@ -48,9 +53,9 @@ def test_init_module_with_config():
 
 
 def test_init_module_with_parameters():
-    mod = FakeModule("name", "version", "suffix", no_parameters=True)
+    mod = FakeModule("name", "version", "suffix", no_parameters=False)
     mod.init_std_options()
-    assert mod._no_parameters == True
+    assert mod._no_parameters is False
 
 
 def test_check_std_options_no_prefix(opts, module):
@@ -77,14 +82,23 @@ def test_check_std_options_pass(opts, module):
 
 
 @mock.patch("optparse.OptionParser.parse_args")
-def test_run_noparam_noconfig(mock_parse_args, opts):
-    mod = FakeModule("name", "version", "suffix", no_parameters=True)
-    args = ["not an input file"]
-    mock_parse_args.return_value = (opts, args)
-    assert mod.run() == 0
-    assert os.path.isfile(os.path.join(mod.output_dir, mod.prefix + "_mod_log.json"))
-    # remove created output directory
-    shutil.rmtree("this")
+class TestRun:
+    def test_ok(self, mock_parse_args, opts):
+        mod = FakeModule("name", "version", "suffix", no_parameters=True, install_config=None)
+        args = ["not an input file"]
+        mock_parse_args.return_value = (opts, args)
+        assert mod.run() == 0
+        assert os.path.isfile(os.path.join(mod.output_dir, mod.prefix + "_mod_log.json"))
+        # remove created output directory
+        shutil.rmtree("this")
+
+    def test_error(self, mock_parse_args, opts):
+        module = FakeModuleError("name", "version", "suffix", no_parameters=True, install_config=None)
+        args = ["not an input file"]
+        mock_parse_args.return_value = (opts, args)
+        assert module.run() == 911
+        assert os.path.isfile(os.path.join(module.output_dir, module.prefix + "_mod_log.json"))
+        shutil.rmtree("this")
 
 
 def test_load_config_no_file_error(module):
@@ -122,3 +136,4 @@ class TestLoadParameterFileCheck:
         module._param_file = "pytest.ini"
         mock_check_parameters.return_value = None
         assert module.load_parameter_file() == 0
+

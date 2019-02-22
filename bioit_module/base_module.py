@@ -208,8 +208,6 @@ class BaseModule(abc.ABC):
             try:
                 output_files_list = self.start_process(**kwargs)
                 ec = self.end_process(error_code=0, files=output_files_list)
-            except NotImplementedError as nie:
-                raise nie
             except Exception as e:
                 ec = self.end_process(error="Unexpected error: %s:\n%s" %
                                             (str(e), traceback.format_exc()), error_code=911)
