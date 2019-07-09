@@ -6,7 +6,7 @@ OncoDNA bioit analysis module base library. This library define base requieremen
 
 | Language | Type    | version |
 | -------- | ------- | ------- |
-| python3  | library | 0.1     |
+| python3  | library | 1.2.2   |
 
 ### git repository
 
@@ -15,7 +15,17 @@ https://gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git
 ### installation
 
 ```bash
-pip install git+ssh://git@gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git#egg=bioit_module
+pip install git+ssh://git@gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git@1.2.2#egg=bioit_module
+```
+
+Or using requirements file to access OncoDNA devpi repository
+
+```ini
+--index-url http://devpi.oncoworkers.oncodna.com/root/pypi/+simple
+--extra-index-url http://devpi.oncoworkers.oncodna.com/root/public/+simple
+--trusted-host devpi.oncoworkers.oncodna.com
+
+bioit_module==1.2.2
 ```
 
 ## What is defined
@@ -104,7 +114,7 @@ class Hello(BaseModule):
 
 if __name__ == "__main__":
     hello = Hello(name="HELLO", version="0.0.0", install_config=None, suffix="hello", no_parameters=True, usage="%prog [options] -o prefix name")
-    hello.run()
+    exit(hello.run())
 ```
 
 ### Exception and error management: Good pratice
@@ -129,8 +139,12 @@ All exception that can occurs have to be catch, if exception leads to process en
 try:
     do_something()
 except Exception as e:
-    self.end_process(error_code=1, error="Something goes wrong in do something: %s" % str(e))
+    return self.end_process(error_code=1, error="Something goes wrong in do something: %s" % str(e))
 ```
+
+#### "end_process" method
+
+This "special method" generate execution summary  file and return exit code to use to stop analysis module.
 
 #### Reserved Error Codes
 
@@ -218,12 +232,12 @@ def check_install_config(self, install_config):
     elif not install_config.has_option("EXTERNALS", "samtools"):
         raise Exception("Invalid configuration, tmap binary location was not defined.")
     elif not os.path.exists(install_config.get("EXTERNALS", "tmap")):
-        self.end_process(error_code=1, error="TMAP binary not found at given location '" + str(install_config.get("EXTERNALS", "tmap")) + "'.")
+        return self.end_process(error_code=1, error="TMAP binary not found at given location '" + str(install_config.get("EXTERNALS", "tmap")) + "'.")
 ```
 
 #### Parameters definition and verification
 
-If no parameters file is requiere by analysis module, set `no_parameters=True` in parent init method, else sepcify `False` or don't use method argument.&ge;
+If no parameters file is requiere by analysis module, set `no_parameters=True` in parent init method, else sepcify `False` or don't use method argument.
 
 If other verification than format of parameter file are needed, module must implement `check_parameters` method. Raised exception will lead to exit code 11, to end with a more specific exit code, use `end_process` method.
 
@@ -232,7 +246,7 @@ def check_parameters(self, parameters):
     if not parameters.has_section("ANALYSIS"):
         raise Exception("Invalid configuration, no section 'ANALYSIS' was found.")
     elif parameters.getint("ANALYSIS", "min_cov") < 0:
-        self.end_process(error_code=2, error="Invalid minimum coverage value in parameter file, 'min_cov' must be >=0")
+        return self.end_process(error_code=2, error="Invalid minimum coverage value in parameter file, 'min_cov' must be >=0")
 ```
 
 ### Module analysis: "`start_process`"
@@ -241,4 +255,4 @@ Madatory implementation is require for the core method of the module, all execut
 
 This method have to return list of output files path.
 
-If an non-catch exception occur during execution, module exection will stop with 911 exit code.
+If an non-catch exception/error occur during execution, module exection will stop with 911 exit code.

@@ -63,13 +63,13 @@ class BaseModule(abc.ABC):
                                action="store_true", default=False, metavar="INT")
 
     def init_custom_options(self):
-        pass
+        return 0
 
     def check_std_options(self, options):
         # if version is required print and exit
         if options.version:
             print(os.path.basename(sys.argv[0]), "version", self.version)
-            return
+            exit(0)
 
         # init log system
         log_level = logging.INFO
@@ -118,10 +118,10 @@ class BaseModule(abc.ABC):
             self._param_file = options.param
 
     def check_custom_options(self, options):
-        pass
+        return 0
 
     def check_args(self, args):
-        pass
+        return 0
 
     def init_output(self):
         # Initialized output files names and create directory if needed
@@ -145,7 +145,7 @@ class BaseModule(abc.ABC):
                 # check config
                 logging.debug("Check install configuration file: %s",
                               self._install_config_file)
-                self.check_install_config(self.install_config)
+                return self.check_install_config(self.install_config)
             except Exception as e:
                 return self.end_process(
                     error="Unexpected error while loading install configuration file "
@@ -157,7 +157,7 @@ class BaseModule(abc.ABC):
         return 0
 
     def check_install_config(self, install_config):
-        pass
+        return 0
 
     def load_parameter_file(self):
         # load parameter file (only if needed)
@@ -186,15 +186,17 @@ class BaseModule(abc.ABC):
         # Initialisation of standard bioit module options.
         self.init_std_options()
         # Initialisation of custom bioit module options.
-        self.init_custom_options()
+        ec = self.init_custom_options()
         # Read options and arguments.
         (options, args) = self.parser.parse_args()
         # Verifications of standard bioit module options.
         self.check_std_options(options)
         # Verifications of custom bioit module options.
-        self.check_custom_options(options)
+        if ec == 0:
+            ec = self.check_custom_options(options)
         # Check  input arguments.
-        self.check_args(args)
+        if ec == 0:
+            ec = self.check_args(args)
         # Initialized output files names and create directory if needed
         self.init_output()
         # load install config

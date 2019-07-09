@@ -119,7 +119,7 @@ class TestLoadConfigFileCheck:
 
     def test_ok(self, mock_check_install_config, module):
         module._install_config_file = "pytest.ini"
-        mock_check_install_config.return_value = None
+        mock_check_install_config.return_value = 0
         assert module.load_install_config() == 0
 
 

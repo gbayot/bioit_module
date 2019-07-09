@@ -1,29 +1,27 @@
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
-# To use a consistent encoding
-from codecs import open
-from os import path
+from pathlib import Path
 
-here = path.abspath(path.dirname(__file__))
+about = {}
+content = Path.cwd().joinpath('bioit_module', '__version__.py').read_bytes()
+exec(content, about)
 
 # Get the long description from the relevant file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
-
 setup(name='bioit_module',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.2',
+    version=about['__version__'],
 
-    description='OncoDNA module template and utility library', long_description=long_description,
+    description='OncoDNA module template and utility library',
 
     # The project's main homepage.
     url='http://gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module',
 
     # Author details
-    author='Maxime LIENARD', author_email='maxime.lienard@oncodna.com',
+    author='Maxime LIENARD',
+    author_email='maxime.lienard@oncodna.com',
 
     # Choose your license
     license='MIT',
@@ -34,7 +32,7 @@ setup(name='bioit_module',
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
         'Intended Audience :: Developers', 'Topic :: Software Development :: Build Tools',
@@ -44,7 +42,8 @@ setup(name='bioit_module',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 3'
+        'Programming Language :: Python :: 3', 'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3', 'Programming Language :: Python :: 3.4',
     ],
 
     # What does your project relate to?
@@ -80,4 +79,7 @@ setup(name='bioit_module',
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    entry_points={'console_scripts': [], }, )
+    entry_points={'console_scripts': [], },
+    test_suite='nose.collector',
+    tests_require=['nose']
+)

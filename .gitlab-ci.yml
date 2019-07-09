@@ -2,6 +2,7 @@ image: python:3.5
 
 stages:
   - tests
+  - build
 
 tests:
   stage: tests
@@ -11,3 +12,21 @@ tests:
   artifacts:
     reports:
       junit: report.xml
+
+build:
+  stage: build
+  script:
+    - pip install devpi-client
+    - devpi use http://devpi.oncoworkers.oncodna.com
+    - devpi login root --password=''
+    - devpi use root/public
+    - devpi upload --only-latest
+
+  only:
+    changes:
+      - OncoIT3/__version__.py
+
+  artifacts:
+    paths:
+      - dist
+    expire_in: 1 week
