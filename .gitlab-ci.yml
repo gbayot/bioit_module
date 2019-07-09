@@ -24,7 +24,7 @@ build:
 
   only:
     changes:
-      - OncoIT3/__version__.py
+      - bioit_module/__version__.py
 
   artifacts:
     paths:
