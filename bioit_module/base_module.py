@@ -208,8 +208,9 @@ class BaseModule(abc.ABC):
         # start module process
         if ec == 0:
             try:
-                output_files_list = self.start_process(**kwargs)
-                ec = self.end_process(error_code=0, files=output_files_list)
+                ec, output_files_list = self.start_process(**kwargs)
+                if ec == 0:
+                    ec = self.end_process(error_code=0, files=output_files_list)
             except Exception as e:
                 ec = self.end_process(error="Unexpected error: %s:\n%s" %
                                             (str(e), traceback.format_exc()), error_code=911)
