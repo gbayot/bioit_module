@@ -6,7 +6,7 @@ OncoDNA bioit analysis module base library. This library define base requieremen
 
 | Language | Type    | version |
 | -------- | ------- | ------- |
-| python3  | library | 1.2.3   |
+| python3  | library | 1.2.4   |
 
 ### git repository
 
@@ -15,7 +15,7 @@ https://gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git
 ### installation
 
 ```bash
-pip install git+ssh://git@gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git@1.2.3#egg=bioit_module
+pip install git+ssh://git@gitlab.oncoworkers.oncodna.com/bioinfo/libraries/bioit_module.git@1.2.4#egg=bioit_module
 ```
 
 Or using requirements file to access OncoDNA devpi repository
@@ -25,7 +25,7 @@ Or using requirements file to access OncoDNA devpi repository
 --extra-index-url http://devpi.oncoworkers.oncodna.com/root/public/+simple
 --trusted-host devpi.oncoworkers.oncodna.com
 
-bioit_module==1.2.3
+bioit_module==1.2.4
 ```
 
 ## What is defined

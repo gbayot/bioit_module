@@ -16,7 +16,7 @@ def module():
 
 class FakeModule(BaseModule):
     def start_process(self, **kwargs):
-        pass
+        return 0, []
 
 
 class FakeModuleError(BaseModule):
