@@ -168,7 +168,7 @@ class BaseModule(abc.ABC):
                 self.parameters.read(self._param_file)
                 # check config
                 logging.debug("Check parameter file: %s", self._param_file)
-                self.check_parameters(self.parameters)
+                return self.check_parameters(self.parameters)
             except Exception as e:
                 return self.end_process(
                     error="Unexpected error while loading parameters file %s: %s\n%s" %
