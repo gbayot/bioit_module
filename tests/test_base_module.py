@@ -134,6 +134,6 @@ class TestLoadParameterFileCheck:
 
     def test_ok(self, mock_check_parameters, module):
         module._param_file = "pytest.ini"
-        mock_check_parameters.return_value = None
+        mock_check_parameters.return_value = 0
         assert module.load_parameter_file() == 0
 
