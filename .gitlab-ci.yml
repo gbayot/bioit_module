@@ -23,6 +23,8 @@ build:
     - devpi upload --only-latest
 
   only:
+    refs:
+      - master
     changes:
       - bioit_module/__version__.py
 
