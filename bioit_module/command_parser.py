@@ -29,8 +29,7 @@ class CommandParser:
             "--out-prefix",
             dest="prefix",
             required=True,
-            help="Prefix use to name output files (ex: output_dir/sample_1). "
-            "If it doesn't exist, output directory will be created.",
+            help="Prefix use to name output files (ex: output_dir/sample_1).",
             type=self._is_valid_filename
         )
         self.parser.add_argument(
