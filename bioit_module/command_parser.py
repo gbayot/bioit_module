@@ -5,6 +5,11 @@ import os
 
 class CommandParser:
     def __init__(self, version, default_install_config=None, need_parameters=True):
+        """
+        :param version: script version
+        :param default_install_config: if None, the -c argument isn't required
+        :param need_parameters: if True, the -p argument is required
+        """
         self.parser = argparse.ArgumentParser()
         self.parser.add_argument("-v", "--version", action="version", version=version)
         self.set_default_option()
@@ -15,6 +20,10 @@ class CommandParser:
             self.set_parameters_option()
 
     def set_default_option(self):
+        """
+        Set default argument.
+        Should not be override.
+        """
         self.parser.add_argument(
             "-o",
             "--out-prefix",
@@ -42,6 +51,9 @@ class CommandParser:
         )
 
     def set_custom_option(self):
+        """"
+        Override this to add new argument
+        """
         pass
 
     def set_install_config_option(self, default_install_config=None):
@@ -71,6 +83,9 @@ class CommandParser:
 
     @staticmethod
     def _is_valid_filename(filename):
+        """
+        argparse type: check if a filename has valid character
+        """
         reg = re.compile(r"[^\w\s/\.@_\-+~$*=]")
         if re.search(reg, filename):
             raise argparse.ArgumentTypeError("Invalid filename '{}' contains illegal characters.".format(filename))
@@ -78,6 +93,9 @@ class CommandParser:
 
     @staticmethod
     def _is_valid_file(filename):
+        """
+        argparse type: check if file exist
+        """
         if not os.path.isfile(filename):
             raise argparse.ArgumentTypeError("Invalid filename '{}' doesn't exist.".format(filename))
         return filename
