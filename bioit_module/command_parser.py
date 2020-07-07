@@ -36,7 +36,7 @@ class CommandParser:
             "-l",
             "--log",
             dest="logfile",
-            required=True,
+            required=False,
             help="Log file, STDOUT if not defined.",
             type=self._is_valid_filename
         )

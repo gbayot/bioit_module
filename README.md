@@ -28,7 +28,7 @@ bioit_module==2.0.0
 | -o Prefix, --out-prefix=Prefix | Always    | Prefix use to name output files (ex:output_dir/sample_1). If it doesn't exist, output directory will be created. |
 | -p FILE, --params=FILE         | If ask    | Module parameters file.                                      |
 | -c FILE, --config=FILE         | If ask    | Use a specific install configuration file.                                  |
-| -l STRING, --log=STRING        | Always    | log file.                             |
+| -l STRING, --log=STRING        | If ask    | log file.                             |
 | -d, --debug                    | No        | Set log level to debug.                                      |
 
 

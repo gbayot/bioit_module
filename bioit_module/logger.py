@@ -1,7 +1,7 @@
 import logging
 
 
-def build_logger(filename, level="INFO"):
+def build_logger(filename=None, level="INFO"):
     root_logger = logging.getLogger()
 
     if root_logger.handlers:
@@ -13,9 +13,10 @@ def build_logger(filename, level="INFO"):
 
     root_logger.setLevel(level)
 
-    file_handler = logging.FileHandler(filename)
-    file_handler.setFormatter(log_formatter)
-    root_logger.addHandler(file_handler)
+    if filename:
+        file_handler = logging.FileHandler(filename)
+        file_handler.setFormatter(log_formatter)
+        root_logger.addHandler(file_handler)
 
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_formatter)
