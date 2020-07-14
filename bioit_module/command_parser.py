@@ -61,7 +61,7 @@ class CommandParser:
                 "-c",
                 "--config",
                 dest="config",
-                required=True,
+                required=False,
                 default=default_install_config,
                 help="Use a specific install configuration file.",
                 type=self._is_valid_file
