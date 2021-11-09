@@ -1,6 +1,8 @@
 import argparse
 import re
 import os
+import fastq_utils
+from pathlib import Path
 
 
 class CommandParser:
@@ -98,3 +100,23 @@ class CommandParser:
         if not os.path.isfile(filename):
             raise argparse.ArgumentTypeError("Invalid filename '{}' doesn't exist.".format(filename))
         return filename
+
+    @staticmethod
+    def _is_valid_integer(num):
+        if not re.match(r"^\d+$", num):
+            raise argparse.ArgumentTypeError(
+                "Invalid number '{}' contains illegal characters.".format(num)
+            )
+        return int(num)
+
+    @staticmethod
+    def _is_valid_dir(directory):
+        if not Path(directory).is_dir():
+            raise argparse.ArgumentTypeError("{} is not a valid directory.".format(directory))
+        return directory
+
+    @staticmethod
+    def _is_valid_fastq(fastq):
+        if not fastq_utils.is_valid_fastq(fastq):
+            raise argparse.ArgumentTypeError("Invalid fastq file '{}'".format(fastq))
+        return fastq

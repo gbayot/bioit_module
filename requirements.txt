@@ -1,1 +1,6 @@
+--index-url http://devpi.oncoworkers.oncodna.com/root/pypi/+simple
+--extra-index-url http://devpi.oncoworkers.oncodna.com/root/public/+simple
+--trusted-host devpi.oncoworkers.oncodna.com
+
 schematics==2.1.0
+fastq_utils==0.0.2
