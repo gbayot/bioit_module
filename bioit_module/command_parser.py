@@ -121,6 +121,6 @@ class CommandParser:
             for extension in extensions:
                 if f.endswith(extension):
                     return f
-            raise argparse.ArgumentTypeError(f"{f} need to end with {extensions}")
+            raise argparse.ArgumentTypeError("{} need to end with {}".format(f, extensions))
         return is_valid_extension
 
