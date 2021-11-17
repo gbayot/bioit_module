@@ -1,7 +1,6 @@
 import argparse
 import re
 import os
-import fastq_utils
 from pathlib import Path
 
 
@@ -116,7 +115,12 @@ class CommandParser:
         return directory
 
     @staticmethod
-    def _is_valid_fastq(fastq):
-        if not fastq_utils.is_valid_fastq(fastq):
-            raise argparse.ArgumentTypeError("Invalid fastq file '{}'".format(fastq))
-        return fastq
+    def _is_valid_extension(extensions):
+        def is_valid_extension(f):
+            CommandParser._is_valid_file(f)
+            for extension in extensions:
+                if f.endswith(extension):
+                    return f
+            raise argparse.ArgumentTypeError(f"{f} need to end with {extensions}")
+        return is_valid_extension
+

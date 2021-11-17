@@ -3,7 +3,6 @@ import os
 import pytest
 from bioit_module.command_parser import CommandParser
 from pathlib import Path
-import fastq_utils
 
 
 class TestCommandParser:
@@ -51,15 +50,28 @@ class TestCommandParser:
         with pytest.raises(argparse.ArgumentTypeError):
            CommandParser._is_valid_integer('115d5')
 
-    def test_is_valid_fastq(self, monkeypatch):
-        def mockreturn(fastq):
+    def test_is_valid_extension(self, monkeypatch):
+        def mockreturn(file):
             return True
-        monkeypatch.setattr(fastq_utils, 'is_valid_fastq', mockreturn)
-        assert CommandParser._is_valid_fastq('test.fastq')
+        monkeypatch.setattr(CommandParser, '_is_valid_file', mockreturn)
+        assert CommandParser._is_valid_extension([".fastq"])('/Path/to/test.fastq')
 
-    def test_is_valid_fastq_exception_invalid_fastq(self, monkeypatch):
-        def mockreturn(fastq):
-            return False
-        monkeypatch.setattr(fastq_utils, 'is_valid_fastq', mockreturn)
+    def test_is_valid_extension_multiple(self, monkeypatch):
+        def mockreturn(file):
+            return True
+        monkeypatch.setattr(CommandParser, '_is_valid_file', mockreturn)
+        assert CommandParser._is_valid_extension(['fastq', 'fastq.gz'])('test.fastq.gz')
+
+    def test_is_not_valid_extension(self, monkeypatch):
+        def mockreturn(file):
+            return True
+        monkeypatch.setattr(CommandParser, '_is_valid_file', mockreturn)
         with pytest.raises(argparse.ArgumentTypeError):
-            CommandParser._is_valid_fastq('test.fastq')
+            assert CommandParser._is_valid_extension([".txt"])('/Path/to/test.fastq')
+
+    def test_is_not_valid_extension_multiple(self, monkeypatch):
+        def mockreturn(file):
+            return True
+        monkeypatch.setattr(CommandParser, '_is_valid_file', mockreturn)
+        with pytest.raises(argparse.ArgumentTypeError):
+            assert CommandParser._is_valid_extension(['txt', 'png'])('test.fastq.gz')

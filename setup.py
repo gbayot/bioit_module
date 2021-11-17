@@ -57,7 +57,7 @@ setup(name='bioit_module',
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=["schematics==2.1.0", "fastq_utils==0.0.2"],
+    install_requires=["schematics==2.1.0"],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,

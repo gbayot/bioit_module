@@ -3,4 +3,3 @@
 --trusted-host devpi.oncoworkers.oncodna.com
 
 schematics==2.1.0
-fastq_utils==0.0.2
