@@ -5,11 +5,12 @@ from pathlib import Path
 
 
 class CommandParser:
-    def __init__(self, version, default_install_config=None, need_parameters=True):
+    def __init__(self, version, default_install_config=None, need_parameters=True, need_pipeline_parameters=False):
         """
         :param version: script version
         :param default_install_config: if None, the -c argument isn't required
         :param need_parameters: if True, the -p argument is required
+        :param need_pipeline_parameters: if True, the --pipe-params and --reference_dir argument are required.
         """
         self.parser = argparse.ArgumentParser()
         self.parser.add_argument("-v", "--version", action="version", version=version)
@@ -19,6 +20,8 @@ class CommandParser:
             self.set_install_config_option(default_install_config)
         if need_parameters:
             self.set_parameters_option()
+        if need_pipeline_parameters:
+            self.set_pipeline_parameters()
 
     def set_default_option(self):
         """
@@ -76,6 +79,22 @@ class CommandParser:
             required=True,
             help="Module parameters file.",
             type=self._is_valid_file
+        )
+
+    def set_pipeline_parameters(self):
+        self.parser.add_argument(
+            "--pipe_params",
+            dest="pipe_params",
+            required=True,
+            help="Pipeline parameters file.",
+            type=self._is_valid_file
+        )
+        self.parser.add_argument(
+            "--reference_dir",
+            dest="reference_dir",
+            required=True,
+            help="Reference directory.",
+            type=self._is_valid_dir
         )
 
     def parse(self):

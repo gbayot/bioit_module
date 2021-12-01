@@ -1,7 +1,7 @@
 import argparse
 import os
 import pytest
-from bioit_module.command_parser import CommandParser
+from bioit_module import CommandParser
 from pathlib import Path
 
 

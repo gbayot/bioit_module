@@ -1,7 +1,7 @@
 import os
 import logging
 from configparser import ConfigParser, NoOptionError
-from bioit_module import build_logger, exit_code
+from bioit_module import build_logger, exit_code,PipelineParameters
 from schematics.exceptions import ValidationError
 
 
@@ -16,6 +16,7 @@ class BioitLauncher:
             self.install_config = self.read_install_config()
             self.logger.debug("Read parameters")
             self.params = self.read_parameters()
+            self.pipe_params = self.read_pipeline_parameters()
         except NoOptionError as e:
             self.logger.exception('')
             exit(exit_code.NoOptionError)
@@ -42,6 +43,16 @@ class BioitLauncher:
         Override this to read and validate the parameters file
         """
         return None
+
+    def read_pipeline_parameters(self):
+        if not hasattr(self.args, "pipe_params"):
+            return None
+        config = self._read_config_file(self.args.pipe_params)
+        parameters = PipelineParameters()
+        parameters.reference_dir = self.args.reference_dir
+        parameters.gencode_version = config.get("PIPE_CONFIG", "gencode_version")
+        parameters.validate()
+        return parameters
 
     def validate_args(self):
         """
