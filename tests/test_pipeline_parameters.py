@@ -16,6 +16,29 @@ class TestPipelineParameters:
         parameters = create_parameters()
         assert '/mnt/data/gtf/gencode.v38.annotation.gtf' == str(parameters.get_gtf_file())
 
+    def test_get_bed_file(self, monkeypatch):
+        def mockreturn_bed(ref_dir):
+            return [Path('dummy.bed')]
+        monkeypatch.setattr(Path, "iterdir", mockreturn_bed)
+        parameters = create_parameters(ref_dir='files')
+        assert 'dummy.bed' == str(parameters.get_bed_ref())
+
+    def test_get_bed_file_not_found(self, monkeypatch):
+        def mockreturn_bed(ref_dir):
+            return [Path('dummy.bd')]
+        monkeypatch.setattr(Path, "iterdir", mockreturn_bed)
+        parameters = create_parameters(ref_dir='files')
+        with pytest.raises(Exception):
+            parameters.get_bed_ref()
+
+    def test_get_bed_file_too_many(self, monkeypatch):
+        def mockreturn_bed(ref_dir):
+            return [Path('dummy.bed'), Path('foo.bed')]
+        monkeypatch.setattr(Path, "iterdir", mockreturn_bed)
+        parameters = create_parameters(ref_dir='files')
+        with pytest.raises(Exception):
+            parameters.get_bed_ref()
+
     def test_get_fasta_ref_fa(self, monkeypatch):
         def mockreturn_fa(ref_dir):
             return [Path('dummy.fa')]
