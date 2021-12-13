@@ -23,6 +23,21 @@ class TestPipelineParameters:
         parameters = create_parameters(ref_dir='files')
         assert 'dummy.bed' == str(parameters.get_bed_ref())
 
+    def test_get_bam_file(self, monkeypatch):
+        def mockreturn_bam(ref_dir):
+            return [Path('/path/dummy.bam'), Path('/path/dummy2.bam')]
+        monkeypatch.setattr(Path, "iterdir", mockreturn_bam)
+        parameters = create_parameters(ref_dir='files')
+        assert '/path/dummy.bam,/path/dummy2.bam' == ','.join(bam for bam in parameters.get_UHRR_bam())
+
+    def test_get_bam_file_not_found(self, monkeypatch):
+        def mockreturn_bam(ref_dir):
+            return []
+        monkeypatch.setattr(Path, "iterdir", mockreturn_bam)
+        parameters = create_parameters(ref_dir='files')
+        with pytest.raises(Exception):
+            parameters.get_UHRR_bam()
+
     def test_get_bed_file_not_found(self, monkeypatch):
         def mockreturn_bed(ref_dir):
             return [Path('dummy.bd')]
